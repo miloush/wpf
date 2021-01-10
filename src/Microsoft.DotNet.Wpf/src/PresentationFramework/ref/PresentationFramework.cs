@@ -76,6 +76,12 @@ namespace Microsoft.Win32
         public System.IO.Stream[] OpenFiles() { throw null; }
         public override void Reset() { }
     }
+    public sealed partial class PickFolderFileDialog : Microsoft.Win32.FileDialog
+    {
+        public PickFolderFileDialog() { }
+        protected override void CheckPermissionsToShowDialog() { }
+        public override void Reset() { }
+    }
     public sealed partial class SaveFileDialog : Microsoft.Win32.FileDialog
     {
         public SaveFileDialog() { }
