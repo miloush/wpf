@@ -1222,6 +1222,23 @@ namespace System.Windows.Media
             }
         }
 
+        /// <summary>
+        /// Returns the text formatting mode.
+        /// </summary>
+        public TextFormattingMode TextFormattingMode
+        {
+            get
+            {
+                CheckInitialized();
+                return _textFormattingMode;
+            }
+            set
+            {
+                CheckInitializing(); // This can only be set during initialization.
+                _textFormattingMode = value;
+            }
+        }
+
         #endregion Public Properties
 
         /// <summary>
@@ -2370,7 +2387,7 @@ namespace System.Windows.Media
                 _clusterMap,
                 _caretStops,
                 _language,
-                TextFormattingMode.Ideal
+                _textFormattingMode
                 );
 
             // User should be able to fix errors that are only caught at EndInit() time. So set Initializing flag to
@@ -2505,7 +2522,7 @@ namespace System.Windows.Media
         private XmlLanguage         _language;
         private string              _deviceFontName;
         private object              _inkBoundingBox;    // Used when CacheInkBounds is on
-        private TextFormattingMode      _textFormattingMode;
+        private TextFormattingMode  _textFormattingMode = TextFormattingMode.Ideal;
         private float               _pixelsPerDip = MS.Internal.FontCache.Util.PixelsPerDip;
 
         // the sine of 20 degrees

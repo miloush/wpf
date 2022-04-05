@@ -6248,6 +6248,7 @@ namespace System.Windows.Media
         public bool IsSideways { get { throw null; } set { } }
         public System.Windows.Markup.XmlLanguage Language { get { throw null; } set { } }
         public float PixelsPerDip { get { throw null; } set { } }
+        public System.Windows.Media.TextFormattingMode TextFormattingMode { get { throw null; } set { } }
         public System.Windows.Media.Geometry BuildGeometry() { throw null; }
         public System.Windows.Rect ComputeAlignmentBox() { throw null; }
         public System.Windows.Rect ComputeInkBoundingBox() { throw null; }
