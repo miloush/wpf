@@ -286,8 +286,8 @@ namespace System.Windows
 
             SetExitCode(exitCode);
             IsShuttingDown = true;
-            Dispatcher.BeginInvoke(DispatcherPriority.Normal, new DispatcherOperationCallback(ShutdownCallback), null);
-}
+            _shutdownOperation = Dispatcher.BeginInvoke(DispatcherPriority.Normal, new DispatcherOperationCallback(ShutdownCallback), null);
+        }
 
         /// <summary>
         ///     Searches for a resource with the passed resourceKey and returns it
@@ -2081,8 +2081,11 @@ namespace System.Windows
                 case WindowMessage.WM_ACTIVATEAPP:
                     handled = WmActivateApp(NativeMethods.IntPtrToInt32(wParam));
                     break;
-                case WindowMessage.WM_QUERYENDSESSION :
+                case WindowMessage.WM_QUERYENDSESSION:
                     handled = WmQueryEndSession(lParam, ref retInt);
+                    break;
+                case WindowMessage.WM_ENDSESSION:
+                    handled = WmEndSession(NativeMethods.IntPtrToInt32(wParam));
                     break;
                 default:
                     handled = false;
@@ -2138,6 +2141,19 @@ namespace System.Windows
             }
 
             return retVal;
+        }
+
+        private bool WmEndSession(Int32 wParam)
+        {
+            int temp = wParam;
+            bool isSessionEnd = (temp == 0 ? false : true);
+
+            // wait for shutdown finishes (gives a chance to Exit handlers to run)
+            if (isSessionEnd == true)
+            {
+                _shutdownOperation?.Wait();
+            }
+            return false;
         }
 
         private void InvalidateResourceReferenceOnWindowCollection(WindowCollection wc, ResourcesChangeInfo info)
@@ -2441,6 +2457,7 @@ namespace System.Windows
 
         private bool                        _appIsShutdown;
         private int                         _exitCode;
+        private DispatcherOperation         _shutdownOperation;
 
         private ShutdownMode                _shutdownMode = ShutdownMode.OnLastWindowClose;
 
