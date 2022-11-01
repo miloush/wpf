@@ -38,7 +38,7 @@ namespace System.Windows.Controls
             //
             if (parameter == null ||
                 values == null ||
-                values.Length != 3 ||
+                values.Length < 3 ||
                 values[0] is not double ||
                 values[1] is not double ||
                 values[2] is not double)
@@ -58,11 +58,23 @@ namespace System.Windows.Controls
             double headerWidth = (double)values[0];
             double borderWidth = (double)values[1];
             double borderHeight = (double)values[2];
+            double borderThickness = 1;
+
+            if (values.Length >= 3)
+            {
+                if (values[3] is not double)
+                {
+                    return DependencyProperty.UnsetValue;
+                }
+                borderThickness = (double)values[3];
+            }
 
             // Doesn't make sense to have a Grid
             // with 0 as width or height
+            // or mask without header
             if (borderWidth == 0
-                || borderHeight == 0)
+                || borderHeight == 0
+                || headerWidth == 0)
             {
                 return null;
             }
@@ -78,6 +90,7 @@ namespace System.Windows.Controls
             {
                 lineWidth = (double)parameter;
             }
+            lineWidth *= borderThickness;
 
             Grid grid = new Grid();
             grid.Width = borderWidth;
